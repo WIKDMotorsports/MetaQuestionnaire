@@ -373,9 +373,9 @@
         }
 
         .prev-btn:hover {
-             border-color: var(--color-border);
-             color: var(--color-text);
-             background-color: transparent;
+            border-color: var(--color-border);
+            color: var(--color-text);
+            background-color: transparent;
         }
 
         .btn-primary-filled, .btn.selected {
@@ -703,6 +703,24 @@
             }
         }
     </style>
+  <!-- Meta Pixel Code -->
+  <script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '796935762872173');
+  // DO NOT auto-track PageView
+  </script>
+  <noscript>
+    <img height="1" width="1" style="display:none"
+      src="https://www.facebook.com/tr?id=796935762872173&ev=PageView&noscript=1"/>
+  </noscript>
+  <!-- End Meta Pixel Code -->
 </head>
 <body>
 
@@ -969,7 +987,7 @@
                                 <animated-icons src="https://animatedicons.co/get-icon?name=Back&style=minimalistic&token=7a22709d-7dc4-4654-b0d6-df0167ffeb74" trigger="click" attributes='{"variationThumbColour":"#EAEAEA","variationName":"Dark","variationNumber":4,"numberOfGroups":2,"strokeWidth":1.5,"backgroundIsGroup":true,"defaultColours":{"group-1":"#EAEAEA","group-2":"#EAEAEA","background":"#0A0A0A"}}' height="22" width="22"></animated-icons>
                                 <span>Back to Results</span>
                             </button>
-                            <button type="button" class="btn btn-primary btn-right" id="generate-email-btn">
+                            <button type="button" class="btn btn-primary btn-right" id="leadButton">
                                 <span>Generate Email</span>
                                 <i class="fas fa-paper-plane"></i>
                             </button>
@@ -1943,19 +1961,19 @@
 
                 if (bestMatch.e85Compatible) {
                     footerHTML += `
-                                <div style="text-align: right;">
-                                    <div style="display: flex; align-items: center; gap: 0.75rem;">
-                                        <div>
-                                            <strong style="font-size: 0.9rem; font-family: var(--font-body); text-transform: none; color: var(--color-text);">E85 Conversion</strong>
-                                            <span style="color: var(--color-text-muted); font-size: 0.8rem; display: block;">+30 WHP</span>
+                                        <div style="text-align: right;">
+                                            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                                <div>
+                                                    <strong style="font-size: 0.9rem; font-family: var(--font-body); text-transform: none; color: var(--color-text);">E85 Conversion</strong>
+                                                    <span style="color: var(--color-text-muted); font-size: 0.8rem; display: block;">+30 WHP</span>
+                                                </div>
+                                                <div>
+                                                    <input type="checkbox" id="e85-summary-toggle" class="choice-input" ${e85Active ? 'checked' : ''}>
+                                                    <label for="e85-summary-toggle" class="e85-toggle-label"><span class="dot"></span></label>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <input type="checkbox" id="e85-summary-toggle" class="choice-input" ${e85Active ? 'checked' : ''}>
-                                            <label for="e85-summary-toggle" class="e85-toggle-label"><span class="dot"></span></label>
-                                        </div>
-                                    </div>
-                                </div>
-                            `;
+                                    `;
                 }
                 footerHTML += `</div>`;
 
@@ -2139,7 +2157,7 @@
         }
     });
 
-    document.getElementById('generate-email-btn').addEventListener('click', function(e) {
+    document.getElementById('leadButton').addEventListener('click', function(e) {
         e.preventDefault();
         saveStateToFirebase();
         const firstNameInputContact = document.getElementById('customer-first-name');
@@ -2522,7 +2540,17 @@ setTimeout(() => {
     runApp();
 });
 </script>
+<script>
+    // Fire Meta Pixel event ONLY when button is clicked
+    document.getElementById('leadButton').addEventListener('click', function() {
+      if (typeof fbq === "function") {
+        fbq('track', 'Lead');
+        console.log("Meta Pixel Lead event fired.");
+      } else {
+        console.error("Meta Pixel not loaded.");
+      }
+    });
+  </script>
 </body>
 </html>
-
 
