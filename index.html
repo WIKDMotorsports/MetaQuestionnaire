@@ -1956,16 +1956,20 @@
                 totalRecommendations++;
                 primaryRecommendationMade = true;
                 
-                // UPDATE 1: Auto-select item
                 if (!recommendationAutoSelected) {
                     selectedItems.push({ id: 'custom-tune-high-hp', type: 'service', title: 'Custom WIKD Tune', price: 0 });
                     recommendationAutoSelected = true;
                 }
                 const isSelected = selectedItems.some(item => item.id === 'custom-tune-high-hp');
 
-                recommendationsContainer.innerHTML += `<div class="result-card"><h3>${tuneIcon} Custom WIKD Tune Recommended</h3><p style="color: var(--color-text-muted);">Your horsepower goal of <strong>+${targetHpDelta} WHP</strong> is ambitious and exceeds our standard performance packages. For this level of performance, we recommend a fully custom WIKD Tune.</p><p style="color: var(--color-text-muted); margin-top: 1rem;">This involves a personalized consultation with our expert tuners to develop a bespoke solution, including part selection and dyno tuning, tailored specifically to your vehicle and goals.</p>${unlockCost > 0 ? `<p style="color: var(--color-text-muted); margin-top: 1rem;">This build will likely require: ${unlockReason.join(' + ')}.</p>` : ''}
+                const nMake = normalizeKey(data.make);
+                const region = makeRegionMap[nMake] || 'unknown';
+                const tuneUrl = region === 'euro' ? 'https://www.wikdmotorsports.com/pages/euro-tune' : 'https://www.wikdmotorsports.com/pages/domestic-tune';
+
+
+                recommendationsContainer.innerHTML += `<div class="result-card"><h3>${tuneIcon} Recommended Tune</h3><p style="color: var(--color-text-muted);">Your horsepower goal of <strong>+${targetHpDelta} WHP</strong> is ambitious and exceeds our standard performance packages. For this level of performance, we recommend a fully custom WIKD Tune.</p><p style="color: var(--color-text-muted); margin-top: 1rem;">This involves a personalized consultation with our expert tuners to develop a bespoke solution, including part selection and dyno tuning, tailored specifically to your vehicle and goals.</p>${unlockCost > 0 ? `<p style="color: var(--color-text-muted); margin-top: 1rem;">This build will likely require: ${unlockReason.join(' + ')}.</p>` : ''}
                 <div style="display: flex; align-items: stretch; gap: 0.5rem; margin-top: 1rem;">
-                    <a href="https://www.wikdmotorsports.com/pages/custom-dyno-tuning" target="_blank" class="btn btn-primary btn-left"><span>Learn More</span></a>
+                    <a href="${tuneUrl}" target="_blank" class="btn btn-primary btn-left"><span>Learn More</span></a>
                     <button type="button" class="btn btn-add btn-right ${isSelected ? 'selected' : ''}" data-id="custom-tune-high-hp" data-type="service" data-title="Custom WIKD Tune" data-price="0"><span>+</span></button>
                 </div></div>`;
             } else if (bestMatch) { 
@@ -1976,7 +1980,6 @@
                 let finalHp = bestMatch.hp_delta;
                 let finalTitle = bestMatch.title;
 
-                // UPDATE 1: Auto-select item logic
                 if (!recommendationAutoSelected) {
                     const recommendedPackageItem = { id: bestMatch.id, type: 'package', title: bestMatch.title, price: bestMatch.price };
                     if (e85Active && bestMatch.e85Compatible) {
@@ -2094,30 +2097,37 @@
             const nMake = normalizeKey(data.make);
             const region = makeRegionMap[nMake] || 'unknown';
 
-            if (region === 'euro' || region === 'us-domestic') {
-                totalRecommendations++;
-                if (!recommendationAutoSelected) {
-                    selectedItems.push({ id: 'custom-tune-domestic-euro', type: 'service', title: 'Custom Dyno Tune', price: 0 });
-                    recommendationAutoSelected = true;
-                }
-                const isSelected = selectedItems.some(item => item.id === 'custom-tune-domestic-euro');
-                recommendationsContainer.innerHTML += `<div class="result-card"><h3>${tuneIcon} Custom Dyno Tune Recommended</h3><p style="color: var(--color-text-muted);">For your ${data.make} ${data.model}, a custom dyno tune is the best path forward to unlock its full potential. This allows us to tailor every parameter to your specific modifications for maximum safe, reliable power.</p>${unlockCost > 0 ? `<p style="color: var(--color-text-muted); margin-top: 1rem;">Required Unlocks: ${unlockReason.join(' + ')}.</p>` : ''}
-                <div style="display: flex; align-items: stretch; gap: 0.5rem; margin-top: 1rem;">
-                    <a href="https://www.wikdmotorsports.com/pages/custom-dyno-tuning" target="_blank" class="btn btn-primary btn-left"><span>Learn More</span></a>
-                    <button type="button" class="btn btn-add btn-right ${isSelected ? 'selected' : ''}" data-id="custom-tune-domestic-euro" data-type="service" data-title="Custom Dyno Tune" data-price="0"><span>+</span></button>
-                </div></div>`;
+            let tuneDescription = `For your ${data.make} ${data.model}, a custom dyno tune is the best path forward to unlock its full potential. This allows us to tailor every parameter to your specific modifications for maximum safe, reliable power.`;
+            let tuneUrl = 'https://www.wikdmotorsports.com/pages/domestic-tune';
+            let tuneId = 'custom-tune-domestic-euro';
+            let tuneDataTitle = 'Custom Dyno Tune';
+
+            if (region === 'euro') {
+                tuneUrl = 'https://www.wikdmotorsports.com/pages/euro-tune';
             } else if (region === 'jdm' || region === 'korean') {
+                tuneDescription = `For your ${data.make} ${data.model}, we recommend a custom import tune to unlock its full potential. Our experts specialize in tuning Japanese and Korean vehicles for maximum performance and reliability.`;
+                tuneId = 'custom-tune-import';
+                tuneDataTitle = 'Custom Import Tune';
+            }
+
+            if (region === 'euro' || region === 'us-domestic' || region === 'jdm' || region === 'korean') {
                 totalRecommendations++;
                 if (!recommendationAutoSelected) {
-                    selectedItems.push({ id: 'custom-tune-import', type: 'service', title: 'Custom Import Tune', price: 0 });
+                    selectedItems.push({ id: tuneId, type: 'service', title: tuneDataTitle, price: 0 });
                     recommendationAutoSelected = true;
                 }
-                const isSelected = selectedItems.some(item => item.id === 'custom-tune-import');
-                recommendationsContainer.innerHTML += `<div class="result-card"><h3>${tuneIcon} Custom Import Tune Recommended</h3><p style="color: var(--color-text-muted);">For your ${data.make} ${data.model}, we recommend a custom import tune to unlock its full potential. Our experts specialize in tuning Japanese and Korean vehicles for maximum performance and reliability.</p>
-                <div style="display: flex; align-items: stretch; gap: 0.5rem; margin-top: 1rem;">
-                    <a href="https://www.wikdmotorsports.com/pages/custom-dyno-tuning" target="_blank" class="btn btn-primary btn-left"><span>Learn More</span></a>
-                    <button type="button" class="btn btn-add btn-right ${isSelected ? 'selected' : ''}" data-id="custom-tune-import" data-type="service" data-title="Custom Import Tune" data-price="0"><span>+</span></button>
-                </div></div>`;
+                const isSelected = selectedItems.some(item => item.id === tuneId);
+
+                recommendationsContainer.innerHTML += `
+                <div class="result-card">
+                    <h3>${tuneIcon} Recommended Tune</h3>
+                    <p style="color: var(--color-text-muted);">${tuneDescription}</p>
+                    ${unlockCost > 0 ? `<p style="color: var(--color-text-muted); margin-top: 1rem;">Required Unlocks: ${unlockReason.join(' + ')}.</p>` : ''}
+                    <div style="display: flex; align-items: stretch; gap: 0.5rem; margin-top: 1rem;">
+                        <a href="${tuneUrl}" target="_blank" class="btn btn-primary btn-left"><span>Learn More</span></a>
+                        <button type="button" class="btn btn-add btn-right ${isSelected ? 'selected' : ''}" data-id="${tuneId}" data-type="service" data-title="${tuneDataTitle}" data-price="0"><span>+</span></button>
+                    </div>
+                </div>`;
             }
         }
 
