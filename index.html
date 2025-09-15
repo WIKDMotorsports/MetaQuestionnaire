@@ -6,7 +6,7 @@
     <title>WIKD Motorsports | Custom Tuning Configurator</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Inter:wght@400;500;600&display Pswap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4.0.2/dist/tesseract.min.js"></script>
     <script src="https://animatedicons.co/scripts/embed-animated-icons.js"></script>
@@ -22,6 +22,7 @@
     s.parentNode.insertBefore(t,s)}(window, document,'script',
     'https://connect.facebook.net/en_US/fbevents.js');
     fbq('init', '796935762872173');
+    fbq('track', 'PageView');
     </script>
     <noscript>
       <img height="1" width="1" style="display:none"
@@ -368,20 +369,20 @@
                     <p id="thank-you-subtitle">We're excited to help you build your dream machine.</p>
                 </div>
                 <div class="call-link-container" id="call-link-thank-you" style="justify-content: center;">
-                            <a href="tel:844-232-9453" class="call-link">
-                                <animated-icons
-                                    src="https://animatedicons.co/get-icon?name=Calling%20V3&style=minimalistic&token=66ff3706-138c-41fa-a993-dee03566e48c"
-                                    trigger="loop"
-                                    attributes='{"variationThumbColour":"#FF3B30","variationName":"Dark","variationNumber":4,"numberOfGroups":2,"strokeWidth":1.5,"backgroundIsGroup":true,"defaultColours":{"group-1":"#FF3B30","group-2":"#FF3B30","background":"#0A0A0A"}}'
-                                    height="22"
-                                    width="22">
-                                </animated-icons>
-                                <span>Want to discuss your build now? Give us a ring, we’re open!</span>
-                            </a>
-                            <div class="qr-tooltip">
-                                <canvas class="qr-code-canvas"></canvas>
-                                <p>Scan to call us!</p>
-                            </div>
+                                <a href="tel:844-232-9453" class="call-link">
+                                    <animated-icons
+                                        src="https://animatedicons.co/get-icon?name=Calling%20V3&style=minimalistic&token=66ff3706-138c-41fa-a993-dee03566e48c"
+                                        trigger="loop"
+                                        attributes='{"variationThumbColour":"#FF3B30","variationName":"Dark","variationNumber":4,"numberOfGroups":2,"strokeWidth":1.5,"backgroundIsGroup":true,"defaultColours":{"group-1":"#FF3B30","group-2":"#FF3B30","background":"#0A0A0A"}}'
+                                        height="22"
+                                        width="22">
+                                    </animated-icons>
+                                    <span>Want to discuss your build now? Give us a ring, we’re open!</span>
+                                </a>
+                                <div class="qr-tooltip">
+                                    <canvas class="qr-code-canvas"></canvas>
+                                    <p>Scan to call us!</p>
+                                </div>
                 </div>
             </div>
         </div>
@@ -396,6 +397,18 @@
             <button type="button" class="btn btn-primary" id="capture-btn"><span><i class="fas fa-camera"></i> Snap Picture</span></button>
         </div>
     </div>
+    
+    <script>
+      const __firebase_config = JSON.stringify({
+        apiKey: "AIzaSyAWX6sYYsa-scVrg2Ctjob04AHqxorq8Fs",
+        authDomain: "wikdconfigurators.firebaseapp.com",
+        projectId: "wikdconfigurators",
+        storageBucket: "wikdconfigurators.firebasestorage.app",
+        messagingSenderId: "623427770699",
+        appId: "1:623427770699:web:ec24e40cb6501c047e30ce",
+        measurementId: "G-8LDR50LHD3"
+      });
+    </script>
     
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
@@ -553,7 +566,7 @@
             });
             const sep=document.createElement('option');sep.textContent='──────────';sep.disabled=true;sep.className='separator';makeSelect.appendChild(sep);
             const others=apiMakes.filter(x=>!added.has(x.key) && makeRegionMap[x.key]).sort((a,b)=>a.raw.localeCompare(b.raw));
-            others.forEach(m => { const o=document.createElement('option'); o.value=m.raw; o.textContent=toTitleCase(m.raw); makeSelect.appendChild(o); added.add(m.key);});    
+            others.forEach(m => { const o=document.createElement('option'); o.value=m.raw; o.textContent=toTitleCase(m.raw); makeSelect.appendChild(o); added.add(m.key);});   
         }catch(err){ console.error('loadCarMakes error',err); makeSelect.innerHTML = '<option value="">Error Loading Makes</option>'; }
     }
 
@@ -565,11 +578,11 @@
         const makeIsPriority = priorityMakes.some(m=>normalizeKey(m)===normalizedMake);
         if(normalizedMake==='cadillac'){
             let apiModels=[];
-            try{ const res=await fetch(`${API_BASE}/GetModelsForMake/${encodeURIComponent(makeName)}?format=json`); const data=await res.json(); apiModels=data.Results.map(r=>r.Model_Name);}catch(e){console.error('cadillac api models',e);}      
+            try{ const res=await fetch(`${API_BASE}/GetModelsForMake/${encodeURIComponent(makeName)}?format=json`); const data=await res.json(); apiModels=data.Results.map(r=>r.Model_Name);}catch(e){console.error('cadillac api models',e);}    
             const manualSet=new Set(manualCadillacModels.map(m=>normalizeKey(m.name)));
             const additional=apiModels.filter(m=>!manualSet.has(normalizeKey(m)));
             modelSelect.innerHTML = '<option value="">-- Select Model --</option>';
-            manualCadillacModels.forEach(mm => { const opt=document.createElement('option'); opt.value=mm.name; opt.textContent=mm.name; if(mm.hasPackage && makeIsPriority) opt.className='model-highlight'; modelSelect.appendChild(opt);});      
+            manualCadillacModels.forEach(mm => { const opt=document.createElement('option'); opt.value=mm.name; opt.textContent=mm.name; if(mm.hasPackage && makeIsPriority) opt.className='model-highlight'; modelSelect.appendChild(opt);});   
             additional.forEach(mn=>{ const opt=document.createElement('option'); opt.value=mn; opt.textContent=mn; modelSelect.appendChild(opt); });
             modelSelect.disabled=false; modelSelect.dispatchEvent(new Event('change')); return;
         }
@@ -583,7 +596,7 @@
             modelSelect.innerHTML = '<option value="">-- Select Model --</option>';
             withPackages.forEach(mn=>{ const opt=document.createElement('option'); opt.value=mn; opt.textContent=mn; if(makeIsPriority) opt.className='model-highlight'; modelSelect.appendChild(opt); });
             withoutPackages.forEach(mn=>{ const opt=document.createElement('option'); opt.value=mn; opt.textContent=mn; modelSelect.appendChild(opt); });
-            if(data.Results.length===0){ modelSelect.innerHTML = '<option value="">No models found</option>';}        
+            if(data.Results.length===0){ modelSelect.innerHTML = '<option value="">No models found</option>';}     
             modelSelect.disabled=false; modelSelect.dispatchEvent(new Event('change'));
         }catch(err){ console.error('loadModelsForMake error',err); modelSelect.innerHTML='<option value="">Error loading models</option>'; }
     }
