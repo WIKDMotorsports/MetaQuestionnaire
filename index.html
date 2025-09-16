@@ -236,6 +236,116 @@
         .budget-wiggle { animation: wiggle var(--wiggle-duration, 0.6s) ease-in-out infinite alternate; display: inline-block; }
         .hp-meter-fill.hp-wiggle { animation: hp-wiggle var(--hp-wiggle-duration, 0.6s) ease-in-out infinite alternate; }
         
+        /* Lava Text Gradient */
+        @keyframes lavaFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .lava-text {
+          background: linear-gradient(
+            90deg,
+            #8b0000,
+            #d80000,
+            #ff2a00,
+            #d80000,
+            #8b0000
+          );
+          background-size: 300%;
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          animation: lavaFlow 4s ease-in-out infinite;
+        }
+
+        /* QR Code Tooltip Styles */
+       .call-link-container {
+            position: relative;
+            display: inline-flex;
+            justify-content: center;
+       }
+       .call-link {
+            display: inline-flex;
+            align-items: center;
+            color: var(--color-primary);
+            text-decoration: none;
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+            text-transform: none;
+       }
+       .call-link:hover { color: var(--color-text); }
+       .call-link animated-icons { width: 22px !important; height: 22px !important; margin-right: 6px; }
+       .qr-tooltip {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(10px);
+            margin-bottom: 12px;
+            background-color: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: 12px;
+            padding: 0.75rem;
+            z-index: 10;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+            pointer-events: none;
+            width: auto;
+       }
+       .qr-tooltip.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+            pointer-events: auto;
+       }
+       .qr-tooltip::before {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 8px;
+            border-style: solid;
+            border-color: var(--color-border) transparent transparent transparent;
+       }
+       .qr-tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-top: -1px;
+            border-width: 7px;
+            border-style: solid;
+            border-color: var(--color-surface) transparent transparent transparent;
+       }
+
+        /* Downward Tooltip for Welcome Page */
+       #call-link-welcome .qr-tooltip {
+            top: 100%;
+            bottom: auto;
+            margin-top: 12px;
+            margin-bottom: 0;
+            transform: translateX(-50%) translateY(-10px);
+       }
+       #call-link-welcome .qr-tooltip.active {
+            transform: translateX(-50%) translateY(0);
+       }
+       #call-link-welcome .qr-tooltip::before {
+            bottom: 100%;
+            top: auto;
+            border-color: transparent transparent var(--color-border) transparent;
+       }
+       #call-link-welcome .qr-tooltip::after {
+            bottom: 100%;
+            top: auto;
+            margin-bottom: -1px;
+            margin-top: 0;
+            border-color: transparent transparent var(--color-surface) transparent;
+       }
+
         @media (max-width: 768px) {
             .panel { padding: 1.5rem; }
             .step-header h2 { font-size: 2rem; }
@@ -265,6 +375,22 @@
                         <div class="step-header">
                             <h2 id="welcome-title">WIKD Tuning Configurator</h2>
                             <p id="welcome-subtitle">Find the perfect performance package for your vehicle. Let's get started!</p>
+                            <div class="call-link-container" id="call-link-welcome">
+                                <a href="tel:+14692498400" class="call-link">
+                                    <animated-icons
+                                        src="https://animatedicons.co/get-icon?name=Calling%20V3&style=minimalistic&token=66ff3706-138c-41fa-a993-dee03566e48c"
+                                        trigger="loop"
+                                        attributes='{"variationThumbColour":"#d80000","variationName":"Dark","variationNumber":4,"numberOfGroups":2,"strokeWidth":1.5,"backgroundIsGroup":true,"defaultColours":{"group-1":"#d80000","group-2":"#d80000","background":"#0A0A0A"}}'
+                                        height="22"
+                                        width="22">
+                                    </animated-icons>
+                                    <span class="lava-text">or give us a ring, we’re open!</span>
+                                </a>
+                                <div class="qr-tooltip">
+                                    <canvas class="qr-code-canvas"></canvas>
+                                    <p>Scan to call us!</p>
+                                </div>
+                            </div>
                         </div>
                         
                         <h3 style="text-align: left; margin-bottom: 1.5rem; font-size: 1.5rem;">Your Info</h3>
@@ -369,15 +495,15 @@
                     <p id="thank-you-subtitle">We're excited to help you build your dream machine.</p>
                 </div>
                 <div class="call-link-container" id="call-link-thank-you" style="justify-content: center;">
-                                <a href="tel:844-232-9453" class="call-link">
+                                <a href="tel:+14692498400" class="call-link">
                                     <animated-icons
                                         src="https://animatedicons.co/get-icon?name=Calling%20V3&style=minimalistic&token=66ff3706-138c-41fa-a993-dee03566e48c"
                                         trigger="loop"
-                                        attributes='{"variationThumbColour":"#FF3B30","variationName":"Dark","variationNumber":4,"numberOfGroups":2,"strokeWidth":1.5,"backgroundIsGroup":true,"defaultColours":{"group-1":"#FF3B30","group-2":"#FF3B30","background":"#0A0A0A"}}'
+                                        attributes='{"variationThumbColour":"#d80000","variationName":"Dark","variationNumber":4,"numberOfGroups":2,"strokeWidth":1.5,"backgroundIsGroup":true,"defaultColours":{"group-1":"#d80000","group-2":"#d80000","background":"#0A0A0A"}}'
                                         height="22"
                                         width="22">
                                     </animated-icons>
-                                    <span>Want to discuss your build now? Give us a ring, we’re open!</span>
+                                    <span class="lava-text">Want to discuss your build now? Give us a ring, we’re open!</span>
                                 </a>
                                 <div class="qr-tooltip">
                                     <canvas class="qr-code-canvas"></canvas>
@@ -428,13 +554,13 @@
         { id: 'stage1', title: 'STAGE 1', price: 1000, mods: 'STOCK TO BOLTONS < 500 WHP', description: 'Visual pre-dyno inspection, baseline dyno runs, and ECU/TCU calibration tailored specifically for your vehicle and modifications. Dyno sheets displaying before & after results included.', note: '' },
         { id: 'stage2', title: 'STAGE 2', price: 1250, mods: '500HP+ INCLUDING ALT FUELS (E85, METHANOL, RACEGAS)', description: 'Stage 2 tuning includes everything from Stage 1 with enhanced calibrations for alternative fuels and performance-driven transmission tuning.', note: 'STAGE 2 provides aggressive ECU/TCU configurations advantageous for alternative fuel setups and performance modifications.' },
         { id: 'stage3', title: 'STAGE 3', price: 1500, mods: '800HP+ including ALT FUELS & POWER ADDERS', description: 'Comprehensive calibration for cars with extensive mods, multi-fuel systems, boost configurations, or large power adders (superchargers, turbos, or nitrous).', note: 'STAGE 3 is the ultimate track-level calibration service, delivering maximum safe power and performance tailored to the enthusiast’s exact specification.' },
-        { id: 'wikd-tune', title: 'WIKD TUNE', price: 1750, mods: '1000HP+ RACE APPLICATIONS', description: 'The WIKD TUNE covers complete calibration on competition-level builds, with dedicated remote support and revision services for continuous fine-tuning.', note: 'REMOTE SUPPORT & custom revisions available at additional cost.<br>CALL FOR DETAILS: 844-232-9453' }
+        { id: 'wikd-tune', title: 'WIKD TUNE', price: 1750, mods: '1000HP+ RACE APPLICATIONS', description: 'The WIKD TUNE covers complete calibration on competition-level builds, with dedicated remote support and revision services for continuous fine-tuning.', note: 'REMOTE SUPPORT & custom revisions available at additional cost.<br>CALL FOR DETAILS: +1 469-249-8400' }
     ];
     const euroImportTuningStages = [
         { id: 'stage1', title: 'STAGE 1', price: 1250, mods: 'STOCK TO BOLT ON MODIFICATIONS', description: "Comprehensive dyno inspection, baseline runs, ECU/TCU calibration tailored specifically to your car’s modifications for maximum drivability and performance. You'll receive before and after dyno sheets.", note: '' },
         { id: 'stage2', title: 'STAGE 2', price: 1500, mods: 'FREE FLOWING EXHAUST & FLOWING INTAKE(S)', description: 'Stage 2 includes everything from Stage 1 plus more aggressive calibrations for enhanced performance and alternative-fuel configurations. Transmission tuning is optimized based on your driving or racing goals.', note: 'Stage 2 pushes additional limits for alternative fuel setups—ideal for enthusiasts serious about performance upgrades and tuning potential.' },
         { id: 'stage3', title: 'STAGE 3', price: 1750, mods: 'UPGRADED TURBO(S), POWER ADDERS, ALT FUELS', description: 'Stage 3 provides ultimate tuning customization, ideal for heavily modified builds. Extensive calibration across multiple fuels, boost levels, and aggressive transmission settings ensure maximum reliable performance.', note: 'Tailor-made tuning designed specifically for serious performance enthusiasts and racers seeking maximum consistency, reliability, and power.' },
-        { id: 'wikd-tune', title: 'WIKD TUNE', price: 2000, mods: '1000HP+ RACE APPLICATIONS', description: 'Exclusive tuning package designed for high-horsepower race applications. Includes everything in previous stages plus comprehensive remote tuning support and revisions to keep peak performance.', note: 'Remote support available at additional cost. Call us at 844-232-9453 for info.' }
+        { id: 'wikd-tune', title: 'WIKD TUNE', price: 2000, mods: '1000HP+ RACE APPLICATIONS', description: 'Exclusive tuning package designed for high-horsepower race applications. Includes everything in previous stages plus comprehensive remote tuning support and revisions to keep peak performance.', note: 'Remote support available at additional cost. Call us at +1 469-249-8400 for info.' }
     ];
     
     // --- FORM ELEMENTS ---
@@ -472,6 +598,7 @@
     let userFirstName = '';
     let selectedItems = []; 
     let currentVehiclePackages = [];
+    const phoneNumber = '+14692498400';
 
     // === VEHICLE SELECTOR LOGIC ===
     const API_BASE = 'https://vpic.nhtsa.dot.gov/api/vehicles';
@@ -840,7 +967,7 @@
             </div>
             <div class="mb-8"><div class="hp-meter" id="hp-meter-container"><div id="hp-meter-fill" class="hp-meter-fill"></div></div></div>
             <div id="package-container"></div>
-            <div class="collapsible-container panel" style="margin-top: 2rem; padding: 0; border: 1px solid var(--color-border);"><div class="collapsible-header"><h3 style="font-size: 1.2rem;">Important Notes</h3><i class="fas fa-chevron-down"></i></div><div class="collapsible-content"><div class="content-inner" style="color: var(--color-text-muted); font-size: 0.9rem;"><ul class="space-y-4" style="list-style-type: none; padding: 0; color: var(--color-text-muted);"><li>All prices are estimates and may vary.</li><li>Shop fees (supplies, hazmat, processing) are separate from package prices.</li><li>Compatibility: <span id="notes-vehicle-info"></span></li><li>Contact WIKD MOTORSPORTS at (844) 232-9453 for a precise quote.</li></ul></div></div></div>
+            <div class="collapsible-container panel" style="margin-top: 2rem; padding: 0; border: 1px solid var(--color-border);"><div class="collapsible-header"><h3 style="font-size: 1.2rem;">Important Notes</h3><i class="fas fa-chevron-down"></i></div><div class="collapsible-content"><div class="content-inner" style="color: var(--color-text-muted); font-size: 0.9rem;"><ul class="space-y-4" style="list-style-type: none; padding: 0; color: var(--color-text-muted);"><li>All prices are estimates and may vary.</li><li>Shop fees (supplies, hazmat, processing) are separate from package prices.</li><li>Compatibility: <span id="notes-vehicle-info"></span></li><li>Contact WIKD MOTORSPORTS at +1 469-249-8400 for a precise quote.</li></ul></div></div></div>
             <div class="btn-group"><button type="button" class="btn prev-btn btn-left"><span>Back</span></button></div>`;
         
         document.getElementById('notes-vehicle-info').textContent = `${data.year} ${data.make} ${data.model} ${data.trim}`;
@@ -960,6 +1087,54 @@
                 }
             });
 
+            // QR Code Tooltip Logic
+            callLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    if (!isMobileDevice()) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        const tooltip = this.parentElement.querySelector('.qr-tooltip');
+                        if (!tooltip) return;
+                        const canvas = tooltip.querySelector('.qr-code-canvas');
+                        const isActive = tooltip.classList.contains('active');
+                        
+                        document.querySelectorAll('.qr-tooltip.active').forEach(activeTooltip => {
+                            if (activeTooltip !== tooltip) {
+                                activeTooltip.classList.remove('active');
+                            }
+                        });
+
+                        if (!isActive) {
+                            tooltip.classList.add('active');
+                            if (!canvas.dataset.rendered) {
+                                QRCode.toCanvas(canvas, `tel:${phoneNumber.replace(/\D/g, '')}`, {
+                                    width: 150,
+                                    margin: 1,
+                                    color: {
+                                        dark: '#FF3B30',
+                                        light: '#141414'
+                                    }
+                                }, function (error) {
+                                    if (error) console.error(error);
+                                    canvas.dataset.rendered = 'true';
+                                });
+                            }
+                        } else {
+                            tooltip.classList.remove('active');
+                        }
+                    }
+                });
+            });
+
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.call-link-container')) {
+                    document.querySelectorAll('.qr-tooltip.active').forEach(tooltip => {
+                        tooltip.classList.remove('active');
+                    });
+                }
+            });
+
+
             const panels = document.querySelectorAll('.panel'); const themes = ['theme-exhaust', 'theme-packages', 'theme-wheels', 'theme-cooling']; let currentThemeIndex = 0, isBeforePrimary = true;
             panels.forEach(p => { p.classList.add(themes[0] + '-before', 'show-before'); });
             setInterval(() => { const nextThemeIndex = (currentThemeIndex + 1) % themes.length; const newTheme = themes[nextThemeIndex]; panels.forEach(p => { if (isBeforePrimary) { themes.forEach(t => p.classList.remove(t + '-after')); p.classList.add(newTheme + '-after', 'show-after'); p.classList.remove('show-before'); } else { themes.forEach(t => p.classList.remove(t + '-before')); p.classList.add(newTheme + '-before', 'show-before'); p.classList.remove('show-after'); } }); currentThemeIndex = nextThemeIndex; isBeforePrimary = !isBeforePrimary; }, 7000);
@@ -977,3 +1152,4 @@
 </script>
 </body>
 </html>
+
