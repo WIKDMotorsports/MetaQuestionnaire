@@ -996,7 +996,11 @@
             [activeItem, nextItem].filter(p => p).forEach((item, index) => {
                 const card = document.createElement('div');
                 card.className = `package-card ${index === 0 ? 'active' : ''} ${item.id === 'package-1000-whp' || item.id === 'wikd-tune' ? 'full-width' : ''}`;
-                card.innerHTML = `<div class="package-card-content"><div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;"><h3 class="text-xl font-bold">${item.adjustedTitle || item.title}</h3><span class="text-xs font-semibold px-2.5 py-0.5 rounded" style="background-color: var(--color-border);">${item.performanceLevel}</span></div><div class="mb-4"><p class="text-3xl font-bold">${(isWikdMode && index === 0) ? '$???,???' : `$${item.price.toLocaleString('en-US', {minimumFractionDigits: 0})}`}</p><p class="text-sm" style="color: var(--color-text-muted)">${displayType === 'packages' ? '+' + (item.adjustedHp || item.hp_delta) + ' WHP' : item.mods}</p></div><p class="text-sm" style="color: var(--color-text-muted); margin-bottom: 1rem;">${item.description}</p>${item.note ? `<div style="background-color: rgba(255, 59, 48, 0.1); border-left: 4px solid var(--color-primary); padding: 0.75rem; margin-bottom: 1rem; border-radius: 4px;"><p style="color: #ffcdd2" class="text-sm">${item.note}</p></div>` : ''}<button class="parts-toggle-btn"><span class="font-medium">${displayType === 'stages' ? 'Details' : 'Included Parts'}</span><i class="fas fa-chevron-down text-xs"></i></button><div class="parts-content"><ul>${(item.parts || []).map(part => `<li>${part}</li>`).join('')}</ul></div>${index === 0 ? `<button type="button" class="btn btn-primary submit-inquiry-btn" style="margin-top: 1rem; width: 100%; clip-path: none; border-radius: 8px;"><span>Submit Inquiry</span></button>` : ''}</div>`;
+                const priceString = (isWikdMode && index === 0) 
+                    ? '$???,???' 
+                    : `${displayType === 'stages' ? 'Starting at ' : ''}$${item.price.toLocaleString('en-US', {minimumFractionDigits: 0})}`;
+
+                card.innerHTML = `<div class="package-card-content"><div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;"><h3 class="text-xl font-bold">${item.adjustedTitle || item.title}</h3><span class="text-xs font-semibold px-2.5 py-0.5 rounded" style="background-color: var(--color-border);">${item.performanceLevel}</span></div><div class="mb-4"><p class="text-3xl font-bold">${priceString}</p><p class="text-sm" style="color: var(--color-text-muted)">${displayType === 'packages' ? '+' + (item.adjustedHp || item.hp_delta) + ' WHP' : item.mods}</p></div><p class="text-sm" style="color: var(--color-text-muted); margin-bottom: 1rem;">${item.description}</p>${item.note ? `<div style="background-color: rgba(255, 59, 48, 0.1); border-left: 4px solid var(--color-primary); padding: 0.75rem; margin-bottom: 1rem; border-radius: 4px;"><p style="color: #ffcdd2" class="text-sm">${item.note}</p></div>` : ''}<button class="parts-toggle-btn"><span class="font-medium">${displayType === 'stages' ? 'Details' : 'Included Parts'}</span><i class="fas fa-chevron-down text-xs"></i></button><div class="parts-content"><ul>${(item.parts || []).map(part => `<li>${part}</li>`).join('')}</ul></div>${index === 0 ? `<button type="button" class="btn btn-primary submit-inquiry-btn" style="margin-top: 1rem; width: 100%; clip-path: none; border-radius: 8px;"><span>Submit Inquiry</span></button>` : ''}</div>`;
                 packageContainer.appendChild(card);
             });
         }
@@ -1152,4 +1156,5 @@
 </script>
 </body>
 </html>
+
 
