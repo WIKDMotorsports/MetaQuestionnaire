@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4.0.2/dist/tesseract.min.js"></script>
     <script src="https://animatedicons.co/scripts/embed-animated-icons.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/qrcode@1.4.4/build/qrcode.min.js"></script>
@@ -34,15 +35,20 @@
             --color-text: #EAEAEA;
             --color-text-muted: #888888;
             --color-primary: #FF3B30;
+            --color-primary-dark: #C70039;
+            --color-secondary: #007AFF;
+            --color-tertiary: #34C759;
             --color-surface: #141414;
             --color-border: #2A2A2A;
             --font-heading: 'Rajdhani', sans-serif;
             --font-body: 'Inter', sans-serif;
+            --ease-out-heavy: cubic-bezier(0.23, 1, 0.32, 1);
         }
 
         /* General Styles */
         html {
             box-sizing: border-box;
+            scroll-behavior: smooth;
         }
         *, *:before, *:after {
             box-sizing: inherit;
@@ -66,8 +72,9 @@
         
         .widget-container {
             width: 100%;
-            padding: 2rem 0;
-            margin: 0;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
         }
 
         @keyframes colorFlowPosition {
@@ -346,6 +353,221 @@
             border-color: transparent transparent var(--color-surface) transparent;
        }
 
+        /* --- NEW STYLES FOR THANK YOU PAGE --- */
+        .panel-thank-you {
+            border-radius: 12px;
+            border: 1px solid var(--color-border);
+            opacity: 1;
+            overflow: hidden;
+            --overlay-opacity: 0;
+        }
+        
+        .panel-thank-you::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #000;
+            opacity: var(--overlay-opacity);
+            pointer-events: none;
+            z-index: 1;
+            transition: opacity 0.1s linear;
+        }
+
+        .panel-thank-you .panel-content {
+            position: relative;
+            z-index: 2;
+        }
+        
+        #thank-you-container .step-header p {
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            min-height: 24px;
+            animation: hover-bounce 3s ease-in-out infinite;
+        }
+
+        #icon-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+        }
+
+        #icon-container .icon-wrapper {
+            filter: drop-shadow(0 0 16px rgba(255, 59, 48, var(--icon-glow-opacity, 0)));
+            transition: filter 0.1s linear;
+        }
+
+        @keyframes slickBounceIn {
+             0% { opacity: 0; transform: translateY(30px) scale(0.8); }
+             70% { opacity: 1; transform: translateY(-10px) scale(1.05); }
+             100% { transform: translateY(0) scale(1); }
+        }
+        @keyframes slickFadeOut {
+             to { opacity: 0; transform: scale(0.8); }
+        }
+        .icon-in { animation: slickBounceIn 0.6s var(--ease-out-heavy) forwards; }
+        .icon-out { animation: slickFadeOut 0.4s ease-out forwards; }
+        
+        .progress-bar-container {
+            width: 200px;
+            height: 2px;
+            background-color: var(--color-border);
+            border-radius: 4px;
+            margin: 1.5rem auto;
+            transition: width 0.8s var(--ease-out-heavy), height 0.6s var(--ease-out-heavy) 0.2s, margin 0.8s var(--ease-out-heavy);
+        }
+        .progress-bar-container.expanded {
+            width: 100%;
+            height: 8px;
+            margin: 1.5rem 0;
+        }
+
+        #countdown-bar {
+            width: 0%;
+            height: 100%;
+            background-color: white;
+            border-radius: 4px;
+            --glow-opacity: 0;
+            animation: pulseBarGlow 3s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
+        }
+        
+        .animated-text-container .cursor {
+            display: inline-block;
+            background-color: var(--color-text-muted);
+            width: 2px;
+            height: 1em;
+            margin-left: 4px;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink { 50% { opacity: 0; } }
+        @keyframes hover-bounce { 50% { transform: translateY(-3px); } }
+        
+        @keyframes pulseBarGlow {
+            0%, 100% { filter: drop-shadow(0 0 8px rgba(255, 59, 48, var(--glow-opacity))); }
+            50% { filter: drop-shadow(0 0 16px rgba(255, 59, 48, var(--glow-opacity))); }
+        }
+
+        .prep-asset {
+            text-align: left;
+            margin-top: 2rem;
+            opacity: 0;
+            transform: scale(0.95);
+            transform-origin: top center;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.7s var(--ease-out-heavy), opacity 0.5s ease-out, transform 0.7s var(--ease-out-heavy);
+        }
+        
+        .prep-asset.is-visible {
+            opacity: 1;
+            transform: scale(1);
+            max-height: 100px;
+        }
+
+        .prep-asset.full-reveal {
+            max-height: 500px;
+        }
+
+        .prep-asset .inner-card {
+             background: var(--color-background);
+            border: 1px solid var(--color-border);
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            transition: padding 0.7s var(--ease-out-heavy);
+        }
+        .prep-asset.full-reveal .inner-card {
+             padding: 2rem;
+        }
+
+        .prep-asset .expert-bio,
+        .prep-asset .next-steps-list {
+            display: none;
+            opacity: 0;
+        }
+
+        .prep-asset.full-reveal .expert-bio {
+            display: flex;
+            opacity: 1;
+        }
+        .prep-asset.full-reveal .next-steps-list {
+            display: block;
+            opacity: 1;
+        }
+        
+        .prep-asset.full-reveal [data-revealed] {
+            opacity: 0;
+            animation: content-fade-in 0.6s var(--ease-out-heavy) forwards;
+        }
+
+        .prep-asset.full-reveal .expert-bio { animation-delay: 0.2s; }
+        .prep-asset.full-reveal .next-steps-list li:nth-of-type(1) { animation-delay: 0.4s; }
+        .prep-asset.full-reveal .next-steps-list li:nth-of-type(2) { animation-delay: 0.5s; }
+        .prep-asset.full-reveal .next-steps-list li:nth-of-type(3) { animation-delay: 0.6s; }
+
+
+        #prep-asset-title {
+            font-size: 1.5rem;
+            margin-top: 0;
+            margin-bottom: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-family: var(--font-heading);
+            text-transform: uppercase;
+        }
+
+        #prep-asset-icon-container {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        @keyframes content-fade-in {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .expert-bio {
+            align-items: center;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--color-border);
+            display: flex;
+        }
+        .expert-image-card {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 1px solid var(--color-border);
+            background: radial-gradient(circle at bottom, var(--gradient-glow-color, rgba(255, 255, 255, 0.4)), transparent 70%), var(--color-background);
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        .expert-image-card img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: cover;
+            transform: scale(1.5);
+        }
+        .expert-info strong { display: block; font-size: 1.1rem; font-weight: 600; text-transform: none; }
+        .expert-info span { font-size: 0.9rem; color: var(--color-text-muted); }
+
+        .next-steps-list {
+            list-style-type: none;
+            padding-left: 0;
+            margin-top: 1.5rem;
+        }
+        .next-steps-list li { display: flex; align-items: flex-start; gap: 0.75rem; margin-bottom: 1rem; }
+        .next-steps-list i { color: var(--color-primary); margin-top: 5px; }
+        
+        .fas.fa-check-circle { color: var(--color-tertiary); }
+        
         @media (max-width: 768px) {
             .panel { padding: 1.5rem; }
             .step-header h2 { font-size: 2rem; }
@@ -357,9 +579,87 @@
             .budget-value-display { text-align: left; }
             #slider-labels .intermediate-label { display: none; }
         }
+        
+        @media (max-width: 640px) {
+            .panel-thank-you.panel { padding: 1.5rem; }
+            #thank-you-container-animated .step-header h2 { font-size: 2rem; }
+            .prep-asset.full-reveal .inner-card { padding: 1.5rem; }
+            .expert-bio {
+                flex-direction: column;
+                text-align: center;
+            }
+            .expert-image-card {
+                margin-bottom: 1rem;
+            }
+        }
+
+        /* --- Star Rating Animation Classes --- */
+        .star-container-fade-in {
+            opacity: 0;
+            animation: starFadeIn 0.5s cubic-bezier(0.1, 1.2, 0, 1) forwards; /* Aggressive easing */
+        }
+        .star-glow-pulse {
+            animation: pulseGlow 3s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite; /* Aggressive easing */
+        }
+        .star-gradient-pulse {
+            --center-opacity: 0.7; /* Set initial state */
+            animation: pulseGradient 3s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite; /* Aggressive easing */
+        }
+        .glint-wrapper {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>');
+            mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>');
+            -webkit-mask-size: contain; mask-size: contain;
+            -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+            -webkit-mask-position: center; mask-position: center;
+        }
+        .glint-wrapper::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(115deg, transparent 40%, rgba(255, 255, 255, 0.6) 50%, transparent 60%);
+            background-size: 200% 100%;
+            background-position: 200% 0;
+            animation: glintWipe 5s infinite;
+            animation-delay: var(--glint-delay, 0s);
+        }
+
+        /* --- Star Rating Keyframes --- */
+        @keyframes starFadeIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to   { opacity: 1; transform: scale(1); }
+        }
+        @keyframes pulseGlow {
+            0%, 100% { filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.7)); }
+            50% { filter: drop-shadow(0 0 16px rgba(251, 191, 36, 1)); }
+        }
+        @keyframes pulseGradient {
+            0%, 100% { --center-opacity: 0.7; }
+            50% { --center-opacity: 1; }
+        }
+        @keyframes glintWipe {
+            0%   { background-position: 200% 0; }
+            5%   { background-position: 200% 0; }
+            25%  { background-position: -200% 0; } /* Slowed down wipe */
+            100% { background-position: -200% 0; }
+        }
     </style>
 </head>
 <body>
+
+    <!-- SVG Definitions for Star Rating -->
+    <svg style="width:0;height:0;position:absolute;" aria-hidden="true" focusable="false">
+        <defs>
+            <radialGradient id="starGradient3D">
+                <stop offset="0%" stop-color="white" stop-opacity="var(--center-opacity, 0.7)"/>
+                <stop offset="20%" stop-color="#FDE047" />
+                <stop offset="90%" stop-color="#F59E0B" />
+            </radialGradient>
+        </defs>
+    </svg>
 
     <div class="widget-container">
         
@@ -452,9 +752,9 @@
                                 <select id="model" name="model" class="form-control" required disabled><option value="">-- Select Make First --</option></select>
                             </div>
                              <div class="form-group">
-                                <label for="year">Year</label>
-                                <select id="year" name="year" class="form-control" required><option value="">-- Select Model First --</option></select>
-                            </div>
+                                 <label for="year">Year</label>
+                                 <select id="year" name="year" class="form-control" required><option value="">-- Select Model First --</option></select>
+                             </div>
                             <div class="form-group hidden-field" id="trim-group">
                                 <label for="trim">Trim</label>
                                 <select id="trim" name="trim" class="form-control" disabled><option value="">-- Select Trim --</option></select>
@@ -479,8 +779,49 @@
             </form>
         </div>
 
-        <div id="thank-you-container" class="hidden-field">
-            <div class="panel" style="text-align: center;">
+        <!-- Animated Thank You Page (Business Hours) -->
+        <div id="thank-you-container-animated" class="hidden-field">
+            <div class="panel panel-thank-you">
+                <div class="panel-content">
+                    <div id="icon-container"></div>
+                    <div class="step-header" style="margin-bottom: 1rem;">
+                        <h2 id="thank-you-title">Get Ready, <span class="user-name"></span>!</h2>
+                        <p id="thank-you-subtitle"><span class="animated-text-container"></span></p>
+                    </div>
+
+                    <div class="progress-bar-container">
+                        <div id="countdown-bar"></div>
+                    </div>
+
+                    <div class="prep-asset">
+                        <div class="inner-card">
+                            <h3 id="prep-asset-title">
+                                <div id="prep-asset-icon-container"></div>
+                                <span id="prep-asset-title-text"></span>
+                            </h3>
+                            <div class="expert-bio" data-revealed>
+                                <div class="expert-image-card">
+                                    <img id="expert-img" src="https://cdn.shopify.com/s/files/1/0671/4635/0805/files/image_ce4ff725-5c1e-435a-9295-2fdd17e28cd8.png?v=1758904548" alt="WIKD Performance Expert">
+                                </div>
+                                <div class="expert-info" data-revealed>
+                                    <strong>You'll be speaking with Thomas</strong>
+                                    <span>Lead Performance Consultant</span>
+                                </div>
+                            </div>
+                            <ul class="next-steps-list">
+                                <li data-revealed><i class="fas fa-list-alt"></i><div><strong>Recap Your Build:</strong> Have your goals and selections fresh in your mind for the call.</div></li>
+                                <li data-revealed><i class="fas fa-question-circle"></i><div><strong>Prepare Your Questions:</strong> Jot down anything you're curious about—no question is too small.</div></li>
+                                <li data-revealed><i class="fas fa-car"></i><div><strong>Get Excited:</strong> You're one step closer to the ultimate driving experience.</div></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Static Thank You Page (Outside Business Hours) -->
+        <div id="thank-you-container-static" class="hidden-field">
+            <div class="panel" style="text-align: center; border-radius: 12px; border: 1px solid var(--color-border);">
                 <div style="display: flex; justify-content: center;">
                     <animated-icons
                         src="https://animatedicons.co/get-icon?name=High%20Five&style=minimalistic&token=dfda27f9-e133-49e0-bf9e-4d952d0ab596"
@@ -491,27 +832,28 @@
                     </animated-icons>
                 </div>
                 <div class="step-header" style="margin-bottom: 1rem;">
-                    <h2 id="thank-you-title" style="margin-bottom: 0.5rem;">Thanks, <span class="user-name"></span>!</h2>
-                    <p id="thank-you-subtitle">We're excited to help you build your dream machine.</p>
+                    <h2 style="margin-bottom: 0.5rem;">Appointment Set, <span class="user-name"></span>!</h2>
+                    <p>A performance expert will call you during our next business hours (Mon-Fri, 9am-5pm).</p>
                 </div>
-                <div class="call-link-container" id="call-link-thank-you" style="justify-content: center;">
-                                <a href="tel:+14692498400" class="call-link">
-                                    <animated-icons
-                                        src="https://animatedicons.co/get-icon?name=Calling%20V3&style=minimalistic&token=66ff3706-138c-41fa-a993-dee03566e48c"
-                                        trigger="loop"
-                                        attributes='{"variationThumbColour":"#d80000","variationName":"Dark","variationNumber":4,"numberOfGroups":2,"strokeWidth":1.5,"backgroundIsGroup":true,"defaultColours":{"group-1":"#d80000","group-2":"#d80000","background":"#0A0A0A"}}'
-                                        height="22"
-                                        width="22">
-                                    </animated-icons>
-                                    <span class="lava-text">Want to discuss your build now? Give us a ring, we’re open!</span>
-                                </a>
-                                <div class="qr-tooltip">
-                                    <canvas class="qr-code-canvas"></canvas>
-                                    <p>Scan to call us!</p>
-                                </div>
+                <div class="call-link-container" style="justify-content: center;">
+                    <a href="tel:+14692498400" class="call-link">
+                        <animated-icons
+                            src="https://animatedicons.co/get-icon?name=Calling%20V3&style=minimalistic&token=66ff3706-138c-41fa-a993-dee03566e48c"
+                            trigger="loop"
+                            attributes='{"variationThumbColour":"#d80000","variationName":"Dark","variationNumber":4,"numberOfGroups":2,"strokeWidth":1.5,"backgroundIsGroup":true,"defaultColours":{"group-1":"#d80000","group-2":"#d80000","background":"#0A0A0A"}}'
+                            height="22"
+                            width="22">
+                        </animated-icons>
+                        <span class="lava-text">Need to talk sooner? Give us a ring!</span>
+                    </a>
+                    <div class="qr-tooltip">
+                        <canvas class="qr-code-canvas"></canvas>
+                        <p>Scan to call us!</p>
+                    </div>
                 </div>
             </div>
         </div>
+
 
     </div>
 
@@ -693,7 +1035,7 @@
             });
             const sep=document.createElement('option');sep.textContent='──────────';sep.disabled=true;sep.className='separator';makeSelect.appendChild(sep);
             const others=apiMakes.filter(x=>!added.has(x.key) && makeRegionMap[x.key]).sort((a,b)=>a.raw.localeCompare(b.raw));
-            others.forEach(m => { const o=document.createElement('option'); o.value=m.raw; o.textContent=toTitleCase(m.raw); makeSelect.appendChild(o); added.add(m.key);});   
+            others.forEach(m => { const o=document.createElement('option'); o.value=m.raw; o.textContent=toTitleCase(m.raw); makeSelect.appendChild(o); added.add(m.key);});  
         }catch(err){ console.error('loadCarMakes error',err); makeSelect.innerHTML = '<option value="">Error Loading Makes</option>'; }
     }
 
@@ -705,11 +1047,11 @@
         const makeIsPriority = priorityMakes.some(m=>normalizeKey(m)===normalizedMake);
         if(normalizedMake==='cadillac'){
             let apiModels=[];
-            try{ const res=await fetch(`${API_BASE}/GetModelsForMake/${encodeURIComponent(makeName)}?format=json`); const data=await res.json(); apiModels=data.Results.map(r=>r.Model_Name);}catch(e){console.error('cadillac api models',e);}    
+            try{ const res=await fetch(`${API_BASE}/GetModelsForMake/${encodeURIComponent(makeName)}?format=json`); const data=await res.json(); apiModels=data.Results.map(r=>r.Model_Name);}catch(e){console.error('cadillac api models',e);}   
             const manualSet=new Set(manualCadillacModels.map(m=>normalizeKey(m.name)));
             const additional=apiModels.filter(m=>!manualSet.has(normalizeKey(m)));
             modelSelect.innerHTML = '<option value="">-- Select Model --</option>';
-            manualCadillacModels.forEach(mm => { const opt=document.createElement('option'); opt.value=mm.name; opt.textContent=mm.name; if(mm.hasPackage && makeIsPriority) opt.className='model-highlight'; modelSelect.appendChild(opt);});   
+            manualCadillacModels.forEach(mm => { const opt=document.createElement('option'); opt.value=mm.name; opt.textContent=mm.name; if(mm.hasPackage && makeIsPriority) opt.className='model-highlight'; modelSelect.appendChild(opt);}); 
             additional.forEach(mn=>{ const opt=document.createElement('option'); opt.value=mn; opt.textContent=mn; modelSelect.appendChild(opt); });
             modelSelect.disabled=false; modelSelect.dispatchEvent(new Event('change')); return;
         }
@@ -960,6 +1302,48 @@
 
         resultPanel.innerHTML = `
             <div class="step-header"><h2>Select Your ${displayType === 'packages' ? 'Package' : 'Stage'}</h2><p>Use the slider to match your budget and goals</p></div>
+            
+            <div class="flex items-center justify-center space-x-4 mb-8">
+                <div class="flex items-center space-x-1">
+                    <!-- Star 1 -->
+                    <a href="https://share.google/7vAZnoZqZSVFpq84p" target="_blank" rel="noopener noreferrer" class="relative block w-8 h-8 star-container-fade-in transition-transform duration-200 hover:scale-110 ease-[cubic-bezier(0.1,1.2,0,1)]" style="animation-delay: 0s;">
+                        <svg class="absolute top-0 left-0 w-full h-full text-yellow-400 star-glow-pulse" style="animation-delay: 0s;" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                        <svg class="absolute top-0 left-0 w-full h-full star-gradient-pulse" style="animation-delay: 0s;" fill="url(#starGradient3D)" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                        <div class="glint-wrapper" style="--glint-delay: 1.0s;"></div>
+                    </a>
+                    <!-- Star 2 -->
+                    <a href="https://share.google/7vAZnoZqZSVFpq84p" target="_blank" rel="noopener noreferrer" class="relative block w-8 h-8 star-container-fade-in transition-transform duration-200 hover:scale-110 ease-[cubic-bezier(0.1,1.2,0,1)]" style="animation-delay: 0.1s;">
+                        <svg class="absolute top-0 left-0 w-full h-full text-yellow-400 star-glow-pulse" style="animation-delay: 0.1s;" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                        <svg class="absolute top-0 left-0 w-full h-full star-gradient-pulse" style="animation-delay: 0.1s;" fill="url(#starGradient3D)" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                        <div class="glint-wrapper" style="--glint-delay: 1.0s;"></div>
+                    </a>
+                    <!-- Star 3 -->
+                    <a href="https://share.google/7vAZnoZqZSVFpq84p" target="_blank" rel="noopener noreferrer" class="relative block w-8 h-8 star-container-fade-in transition-transform duration-200 hover:scale-110 ease-[cubic-bezier(0.1,1.2,0,1)]" style="animation-delay: 0.2s;">
+                        <svg class="absolute top-0 left-0 w-full h-full text-yellow-400 star-glow-pulse" style="animation-delay: 0.2s;" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                        <svg class="absolute top-0 left-0 w-full h-full star-gradient-pulse" style="animation-delay: 0.2s;" fill="url(#starGradient3D)" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                        <div class="glint-wrapper" style="--glint-delay: 1.0s;"></div>
+                    </a>
+                    <!-- Star 4 -->
+                    <a href="https://share.google/7vAZnoZqZSVFpq84p" target="_blank" rel="noopener noreferrer" class="relative block w-8 h-8 star-container-fade-in transition-transform duration-200 hover:scale-110 ease-[cubic-bezier(0.1,1.2,0,1)]" style="animation-delay: 0.3s;">
+                        <svg class="absolute top-0 left-0 w-full h-full text-yellow-400 star-glow-pulse" style="animation-delay: 0.3s;" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                        <svg class="absolute top-0 left-0 w-full h-full star-gradient-pulse" style="animation-delay: 0.3s;" fill="url(#starGradient3D)" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                        <div class="glint-wrapper" style="--glint-delay: 1.0s;"></div>
+                    </a>
+                    <!-- Partial Star 5 -->
+                    <a href="https://share.google/7vAZnoZqZSVFpq84p" target="_blank" rel="noopener noreferrer" class="relative block w-8 h-8 star-container-fade-in transition-transform duration-200 hover:scale-110 ease-[cubic-bezier(0.1,1.2,0,1)]" style="animation-delay: 0.4s;">
+                        <svg class="absolute top-0 left-0 w-full h-full text-yellow-400 star-glow-pulse" style="animation-delay: 0.4s;" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                        <svg class="absolute top-0 left-0 w-full h-full text-zinc-700" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                        <div class="absolute top-0 left-0 w-full h-full" style="clip-path: inset(0 40% 0 0);">
+                            <svg class="w-full h-full star-gradient-pulse" style="animation-delay: 0.4s;" fill="url(#starGradient3D)" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                            <div class="glint-wrapper" style="--glint-delay: 1.0s;"></div>
+                        </div>
+                    </a>
+                </div>
+                <div class="text-zinc-300 font-bold text-2xl star-container-fade-in" style="animation-delay: 0.5s;">
+                    4.6 / 5
+                </div>
+            </div>
+
             <div class="budget-panel" id="budget-panel">
                 <div class="budget-panel-header"><div><h2 class="text-2xl font-bold" style="text-transform: none; color: white;">Your Budget</h2></div><div class="budget-value-display"><span id="budget-value"></span><span id="budget-value-suffix">/${displayType === 'packages' ? 'package' : 'stage'}</span></div></div>
                 <div class="relative"><input type="range" min="0" max="1000" step="1" value="0" id="budget-slider"><div id="slider-labels"></div></div>
@@ -1036,8 +1420,223 @@
         } catch (err) { 
             console.error("Error sending to Zapier:", err); 
         }
-        if (typeof fbq === "function") fbq('track', 'Lead');
-        setTimeout(() => { questionnaireContainer.classList.remove('active'); questionnaireContainer.classList.add('hidden-field'); thankYouContainer.classList.remove('hidden-field'); thankYouContainer.classList.add('active'); validateAndStoreName(); window.scrollTo(0, 0); }, 500); 
+        if (typeof fbq === "function") fbq('track', 'Purchase', {currency: "USD", value: selectedItems[0]?.price || 0.0});
+        
+        showThankYouPage();
+    }
+
+    // --- THANK YOU PAGE LOGIC ---
+    async function runThankYouAnimation() {
+        const thankYouAnimated = document.getElementById('thank-you-container-animated');
+        const userName = userFirstName;
+        const userCar = { model: `${makeSelect.value} ${modelSelect.value}`, engine: `${makeSelect.value} Engine` };
+        
+        const subtitleContainer = thankYouAnimated.querySelector('#thank-you-subtitle .animated-text-container');
+        const iconContainer = thankYouAnimated.querySelector('#icon-container');
+        const countdownBar = thankYouAnimated.querySelector('#countdown-bar');
+        const prepAsset = thankYouAnimated.querySelector('.prep-asset');
+        const progressBarContainer = thankYouAnimated.querySelector('.progress-bar-container');
+        const prepAssetIconContainer = thankYouAnimated.querySelector('#prep-asset-icon-container');
+        const prepAsseTitleText = thankYouAnimated.querySelector('#prep-asset-title-text');
+        const expertImageCard = thankYouAnimated.querySelector('.expert-image-card');
+
+        const mainIconAttributes = `trigger="loop" height="200" width="200" attributes='{"variationThumbColour":"#FF3B30","variationName":"Dark","variationNumber":4,"numberOfGroups":2,"strokeWidth":1.5,"backgroundIsGroup":true,"defaultColours":{"group-1":"#FF3B30","group-2":"#EAEAEA","background":"#141414"}}'`;
+        const prepIconAttributes = `trigger="loop" height="24" width="24" attributes='{"variationThumbColour":"#FF3B30","variationName":"Dark","variationNumber":4,"numberOfGroups":2,"strokeWidth":2,"backgroundIsGroup":true,"defaultColours":{"group-1":"#FF3B30","group-2":"#EAEAEA","background":"#141414"}}'`;
+        
+        const iconMap = {
+            0: `<animated-icons src="https://animatedicons.co/get-icon?name=High%20Five&style=minimalistic&token=dfda27f9-e133-49e0-bf9e-4d952d0ab596" ${mainIconAttributes}></animated-icons>`,
+            1: `<animated-icons src="https://animatedicons.co/get-icon?name=Chatbot&style=minimalistic&token=30b1ab73-8407-40c6-ac85-74f21c602043" ${mainIconAttributes}></animated-icons>`,
+            2: `<animated-icons src="https://animatedicons.co/get-icon?name=Maintenance&style=minimalistic&token=c427791f-d7f8-4a99-a56b-60ef3373e1f7" ${mainIconAttributes}></animated-icons>`,
+            3: `<animated-icons src="https://animatedicons.co/get-icon?name=Research&style=minimalistic&token=debf6854-a861-4155-b483-b1a147f1f3ec" ${mainIconAttributes}></animated-icons>`,
+            4: `<animated-icons src="https://animatedicons.co/get-icon?name=Advantage&style=minimalistic&token=bbc79435-552e-4da3-894d-89c634dc884b" ${mainIconAttributes}></animated-icons>`,
+            5: `<animated-icons src="https://animatedicons.co/get-icon?name=Typing&style=minimalistic&token=1fe0b20b-e47a-4784-8e51-f4e99eaeec73" ${mainIconAttributes}></animated-icons>`,
+            6: `<animated-icons src="https://animatedicons.co/get-icon?name=Dynamic%20Role&style=minimalistic&token=deb3f3dc-7e65-4d2a-a47e-e6447f4bab30" ${mainIconAttributes}></animated-icons>`,
+            7: `<animated-icons src="https://animatedicons.co/get-icon?name=Competitiveness&style=minimalistic&token=74e4f843-59ad-4503-b28d-8656a63d73bd" ${mainIconAttributes}></animated-icons>`,
+            8: `<animated-icons src="https://animatedicons.co/get-icon?name=KM&style=minimalistic&token=5729fdff-2cfc-4b8b-9952-2ff7da52563d" ${mainIconAttributes}></animated-icons>`,
+            9: `<animated-icons src="https://animatedicons.co/get-icon?name=Warranty&style=minimalistic&token=240003ce-c76a-49ff-b69a-4123c54f8934" ${mainIconAttributes}></animated-icons>`,
+            10: `<animated-icons src="https://animatedicons.co/get-icon?name=Neck%20Tie&style=minimalistic&token=762fea02-68a8-43f8-9153-42da75726e8c" ${mainIconAttributes}></animated-icons>`,
+            'sunglasses': `<animated-icons src="https://animatedicons.co/get-icon?name=Sunglasses&style=minimalistic&token=d9992703-60aa-4186-87d3-fd225ebd1a12" ${mainIconAttributes}></animated-icons>`,
+            'running': `<animated-icons src="https://animatedicons.co/get-icon?name=Running%20Person&style=minimalistic&token=f6cc1292-1aa7-4566-89b2-c5bfa23de4b6" ${mainIconAttributes}></animated-icons>`,
+            11: `<animated-icons src="https://animatedicons.co/get-icon?name=Calling%20V3&style=minimalistic&token=66ff3706-138c-41fa-a993-dee03566e48c" ${mainIconAttributes}></animated-icons>`
+        };
+        const prepAssetIcons = {
+            'identifying': `<animated-icons src="https://animatedicons.co/get-icon?name=Sensor&style=minimalistic&token=d2e63307-9111-4ea1-a108-0fd228efa70c" ${prepIconAttributes}></animated-icons>`,
+            'assigning': `<animated-icons src="https://animatedicons.co/get-icon?name=Affiliate&style=minimalistic&token=563d6772-d486-4846-bcc5-92e4daad5f08" ${prepIconAttributes}></animated-icons>`,
+            'confirmed': `<i class="fas fa-check-circle"></i>`
+        };
+        const storyTimeline = [
+             { text: `Okay, ${userName}! Your blueprint for the ${userCar.model} is locked in.`, duration: 8000 },
+             { text: `Our system is analyzing your goals for maximum power and style...`, duration: 8000 },
+             { text: `Josh is earmarking the perfect bolt-ons for your build...`, duration: 10000 },
+             { text: `Adam is reviewing fabrication needs for a flawless fit...`, duration: 10000 },
+             { text: `Running advanced simulations... your performance is going to be unreal.`, duration: 12000 },
+             { text: `Nick is already sketching out a custom tune for that ${userCar.engine}...`, duration: 10000 },
+             { text: `This build has our entire shop buzzing with excitement, ${userName}.`, duration: 7000 },
+             { text: `We're compiling a few exclusive options just for your build...`, duration: 10000 },
+             { text: `The potential for your ${userCar.model} is off the charts.`, duration: 7000 },
+             { text: `Your performance roadmap is being finalized right now...`, duration: 10000 },
+             { text: `Thomas is getting ready for the call. He's excited to talk to you.`, duration: 18000 },
+             { text: `The wait is over! Your performance expert is calling now!`, duration: 10000 }
+        ];
+        const totalDuration = storyTimeline.reduce((acc, s) => acc + s.duration, 0);
+        const typeWriter = (element, text, i = 0) => new Promise(resolve => {
+            const speed = 50;
+            if (i < text.length) {
+                element.innerHTML = text.substring(0, i + 1) + '<span class="cursor"></span>';
+                setTimeout(() => resolve(typeWriter(element, text, i + 1)), speed);
+            } else {
+                element.innerHTML = text;
+                resolve();
+            }
+        });
+        const eraseWriter = (element, text, i = text.length -1) => new Promise(resolve => {
+            const speed = 30;
+            if (i >= 0) {
+                element.innerHTML = text.substring(0, i) + '<span class="cursor"></span>';
+                setTimeout(() => resolve(eraseWriter(element, text, i - 1)), speed);
+            } else {
+                 element.innerHTML = '';
+                 resolve();
+            }
+        });
+        const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+        const firstStep = storyTimeline[0];
+        const firstTypeDuration = firstStep.text.length * 50;
+        const firstEraseDuration = firstStep.text.length * 30;
+        let masterStartTime = Date.now();
+        let animationFrameId;
+        const panel = document.querySelector('.panel-thank-you');
+        const animateBar = () => {
+            const elapsedTime = Date.now() - masterStartTime;
+            let progress = elapsedTime / totalDuration;
+            if (progress > 1) progress = 1;
+            if (!progressBarContainer.classList.contains('expanded')) {
+                const bootUpProgress = elapsedTime / firstStep.duration;
+                countdownBar.style.width = `${bootUpProgress * 100}%`;
+            } else {
+                countdownBar.style.width = `${progress * 100}%`;
+            }
+            const maxDim = 0.4;
+            panel.style.setProperty('--overlay-opacity', progress * maxDim);
+            const colorChangeStart = 0.1;
+            const colorChangeEnd = 0.25; 
+            const startColor = { r: 255, g: 255, b: 255 };
+            const endColor = { r: 255, g: 59, b: 48 };
+            let r = startColor.r, g = startColor.g, b = startColor.b;
+            if (progress >= colorChangeStart && progress <= colorChangeEnd) {
+                const colorProgress = (progress - colorChangeStart) / (colorChangeEnd - colorChangeStart);
+                g = Math.round(startColor.g - (startColor.g - endColor.g) * colorProgress);
+                b = Math.round(startColor.b - (startColor.b - endColor.b) * colorProgress);
+            } else if (progress > colorChangeEnd) {
+               g = endColor.g;
+               b = endColor.b;
+            }
+            countdownBar.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
+            const gradientRgbaColor = `rgba(${r}, ${g}, ${b}, 0.4)`;
+            expertImageCard.style.setProperty('--gradient-glow-color', gradientRgbaColor);
+            const glowStart = 0.25;
+            const glowEnd = 0.5;
+            const maxGlowOpacity = 0.9;
+            const maxIconGlowOpacity = 0.45;
+            if (progress > glowStart) {
+                let glowProgress = (progress - glowStart) / (glowEnd - glowStart);
+                if (glowProgress > 1) glowProgress = 1;
+                const currentBarGlowOpacity = glowProgress * maxGlowOpacity;
+                const currentIconGlowOpacity = glowProgress * maxIconGlowOpacity;
+                countdownBar.style.setProperty('--glow-opacity', currentBarGlowOpacity);
+                iconContainer.style.setProperty('--icon-glow-opacity', currentIconGlowOpacity);
+            } else {
+                countdownBar.style.setProperty('--glow-opacity', 0);
+                iconContainer.style.setProperty('--icon-glow-opacity', 0);
+            }
+            animationFrameId = requestAnimationFrame(animateBar);
+        };
+        iconContainer.innerHTML = `<div class="icon-wrapper icon-in">${iconMap[0]}</div>`;
+        requestAnimationFrame(animateBar);
+        const typePromise = typeWriter(subtitleContainer, firstStep.text);
+        setTimeout(async () => {
+            prepAsset.classList.add('is-visible');
+            prepAsseTitleText.textContent = "Identifying optimal agent...";
+            prepAssetIconContainer.innerHTML = prepAssetIcons.identifying;
+            await sleep(1500);
+            prepAsseTitleText.textContent = "Assigning Expert to Case...";
+            prepAssetIconContainer.innerHTML = prepAssetIcons.assigning;
+        }, firstTypeDuration / 2);
+        await typePromise;
+        await sleep(storyTimeline[0].duration - firstTypeDuration - firstEraseDuration);
+        setTimeout(() => {
+            progressBarContainer.classList.add('expanded');
+            prepAsset.classList.add('full-reveal');
+            prepAsseTitleText.textContent = "Your Consultation is Moments Away";
+            prepAssetIconContainer.innerHTML = prepAssetIcons.confirmed;
+        }, firstEraseDuration / 2);
+        await eraseWriter(subtitleContainer, firstStep.text);
+        await sleep(800);
+        for (let i = 1; i < storyTimeline.length; i++) {
+            const step = storyTimeline[i];
+            if (i === 10) {
+                const text = step.text;
+                const subDuration = step.duration / 3;
+                let currentIcon = iconContainer.querySelector('.icon-wrapper');
+                if(currentIcon) { currentIcon.classList.add('icon-out'); await sleep(400); }
+                iconContainer.innerHTML = `<div class="icon-wrapper icon-in">${iconMap[10]}</div>`;
+                const typePromise = typeWriter(subtitleContainer, text);
+                await sleep(subDuration - 400);
+                currentIcon = iconContainer.querySelector('.icon-wrapper');
+                if(currentIcon) { currentIcon.classList.add('icon-out'); await sleep(400); }
+                iconContainer.innerHTML = `<div class="icon-wrapper icon-in">${iconMap['sunglasses']}</div>`;
+                await sleep(subDuration - 400);
+                currentIcon = iconContainer.querySelector('.icon-wrapper');
+                if(currentIcon) { currentIcon.classList.add('icon-out'); await sleep(400); }
+                iconContainer.innerHTML = `<div class="icon-wrapper icon-in">${iconMap['running']}</div>`;
+                await typePromise;
+                await sleep(subDuration - 400);
+                await eraseWriter(subtitleContainer, text);
+            } else {
+                const currentIcon = iconContainer.querySelector('.icon-wrapper');
+                if (currentIcon) {
+                    currentIcon.classList.add('icon-out');
+                    await sleep(400);
+                }
+                iconContainer.innerHTML = `<div class="icon-wrapper icon-in">${iconMap[i]}</div>`;
+                const typeDuration = step.text.length * 50;
+                const eraseDuration = step.text.length * 30;
+                let pauseDuration = step.duration - typeDuration - eraseDuration - 1000;
+                if (pauseDuration < 1000) pauseDuration = 1000;
+                await typeWriter(subtitleContainer, step.text);
+                await sleep(pauseDuration);
+                if (i < storyTimeline.length - 1) {
+                     await eraseWriter(subtitleContainer, step.text);
+                }
+            }
+        }
+        cancelAnimationFrame(animationFrameId);
+    }
+
+    function showThankYouPage() {
+        questionnaireContainer.classList.remove('active');
+        questionnaireContainer.classList.add('hidden-field');
+        validateAndStoreName();
+        window.scrollTo(0, 0);
+
+        const now = new Date();
+        const day = now.getDay(); // Sunday = 0, Monday = 1, etc.
+        const hour = now.getHours();
+        // Business hours: Mon-Fri (1-5), 9am to 5pm (hour 17 is 5pm)
+        const isBusinessHours = day >= 1 && day <= 5 && hour >= 9 && hour < 17;
+
+        if (isBusinessHours) {
+            const thankYouAnimated = document.getElementById('thank-you-container-animated');
+            thankYouAnimated.classList.remove('hidden-field');
+            thankYouAnimated.classList.add('active');
+            runThankYouAnimation();
+        } else {
+            // It's outside business hours. Show the static page.
+            const thankYouStatic = document.getElementById('thank-you-container-static');
+            thankYouStatic.classList.remove('hidden-field');
+            thankYouStatic.classList.add('active');
+        }
     }
     
     // --- APP INITIALIZATION ---
@@ -1139,7 +1738,7 @@
             });
 
 
-            const panels = document.querySelectorAll('.panel'); const themes = ['theme-exhaust', 'theme-packages', 'theme-wheels', 'theme-cooling']; let currentThemeIndex = 0, isBeforePrimary = true;
+            const panels = document.querySelectorAll('#questionnaire-container .panel'); const themes = ['theme-exhaust', 'theme-packages', 'theme-wheels', 'theme-cooling']; let currentThemeIndex = 0, isBeforePrimary = true;
             panels.forEach(p => { p.classList.add(themes[0] + '-before', 'show-before'); });
             setInterval(() => { const nextThemeIndex = (currentThemeIndex + 1) % themes.length; const newTheme = themes[nextThemeIndex]; panels.forEach(p => { if (isBeforePrimary) { themes.forEach(t => p.classList.remove(t + '-after')); p.classList.add(newTheme + '-after', 'show-after'); p.classList.remove('show-before'); } else { themes.forEach(t => p.classList.remove(t + '-before')); p.classList.add(newTheme + '-before', 'show-before'); p.classList.remove('show-after'); } }); currentThemeIndex = nextThemeIndex; isBeforePrimary = !isBeforePrimary; }, 7000);
         } catch (error) {
@@ -1150,7 +1749,6 @@
     
     function initializeProgressBar() { const totalSteps = progressSteps.length; const barStartOffset = (1 / totalSteps / 2) * 100; progressBar.style.setProperty('--bar-start-offset', `${barStartOffset}%`); progressBar.style.setProperty('--bar-width', `${100 - (barStartOffset * 2)}%`); updateStep(1, true); }
     function checkBusinessHours() { /* ... unchanged ... */ }
-    // ... other unchanged event listeners like callLinks, etc.
     runApp();
 });
 </script>
